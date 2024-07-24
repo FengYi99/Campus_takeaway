@@ -8,10 +8,12 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.Setmeal;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -33,6 +35,8 @@ public class DishServiceImpl implements DishService {
     private DishFlavorMapper dishFlavorMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     /**
      * 新增菜品和对应的口味
@@ -150,5 +154,47 @@ public class DishServiceImpl implements DishService {
             // 向口味表中插入n条数据
             dishFlavorMapper.insertBatch(flavors);
         }
+    }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    public List<Dish> list(Long categoryId) {
+        Dish dish = Dish.builder()
+                .categoryId(categoryId)
+                .status(StatusConstant.ENABLE)
+                .build();
+        return dishMapper.list(dish);
+    }
+
+    /**
+     * 菜品起售停售
+     * @param status
+     * @param id
+     */
+    public void startOrStop(Integer status, Long id) {
+        // TODO 停售菜品逻辑未实现
+        /*// 停售菜品时，将包含该菜品的所有套餐改为停售状态
+        if (status == StatusConstant.DISABLE) {
+            List<Setmeal> setmealList = setmealMapper.getByDishId(id);
+            if (setmealList != null && setmealList.size() > 0) {
+                setmealList.forEach(setmeal -> {
+                    Setmeal updatedSetmeal = Setmeal.builder()
+                            .id(setmeal.getId())
+                            .status(StatusConstant.DISABLE)
+                            .build();
+                    setmealMapper.update(updatedSetmeal);
+                });
+            }
+        }*/
+
+        // 更新菜品状态
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+        dishMapper.update(dish);
     }
 }
