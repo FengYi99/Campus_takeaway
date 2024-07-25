@@ -175,8 +175,13 @@ public class DishServiceImpl implements DishService {
      * @param id
      */
     public void startOrStop(Integer status, Long id) {
-        // TODO 停售菜品逻辑未实现
-        /*// 停售菜品时，将包含该菜品的所有套餐改为停售状态
+        // 更新菜品状态
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+        dishMapper.update(dish);
+        // 停售菜品时，将包含该菜品的所有套餐改为停售状态
         if (status == StatusConstant.DISABLE) {
             List<Setmeal> setmealList = setmealMapper.getByDishId(id);
             if (setmealList != null && setmealList.size() > 0) {
@@ -188,13 +193,7 @@ public class DishServiceImpl implements DishService {
                     setmealMapper.update(updatedSetmeal);
                 });
             }
-        }*/
+        }
 
-        // 更新菜品状态
-        Dish dish = Dish.builder()
-                .id(id)
-                .status(status)
-                .build();
-        dishMapper.update(dish);
     }
 }
