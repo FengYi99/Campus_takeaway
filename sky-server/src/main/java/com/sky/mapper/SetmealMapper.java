@@ -53,17 +53,10 @@ public interface SetmealMapper {
     void deleteById(Long setmealId);
 
     /**
-     * 根据id动态修改套餐数据
+     * 根据id修改套餐
+     *
      * @param setmeal
      */
-    @AutoFill(value = OperationType.UPDATE)
+    @AutoFill(OperationType.UPDATE)
     void update(Setmeal setmeal);
-
-    /**
-     * 根据菜品id查询套餐
-     * @param dishId
-     * @return
-     */
-    @Select("select a.* from setmeal a left join setmeal_dish b on a.id = b.setmeal_id where b.dish_id = #{dishId}")
-    List<Setmeal> getByDishId(Long dishId);
 }
