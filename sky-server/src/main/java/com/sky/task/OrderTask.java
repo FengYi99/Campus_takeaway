@@ -23,10 +23,12 @@ public class OrderTask {
     /**
      * 处理支付超时订单
      */
+    // 每分钟处理一次超时订单
     @Scheduled(cron = "0 * * * * ?")
     public void processTimeoutOrder(){
         log.info("处理支付超时订单：{}", LocalDateTime.now());
 
+        // 当前时间的前15分钟
         LocalDateTime time = LocalDateTime.now().plusMinutes(-15);
 
         // select * from orders where status = 1 and order_time < 当前时间-15分钟
@@ -44,6 +46,7 @@ public class OrderTask {
     /**
      * 处理“派送中”状态的订单
      */
+    // 每天凌晨一点处理前一天的订单
     @Scheduled(cron = "0 0 1 * * ?")
     public void processDeliveryOrder(){
         log.info("处理派送中订单：{}", LocalDateTime.now());
